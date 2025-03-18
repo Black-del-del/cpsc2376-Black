@@ -1,63 +1,162 @@
 #include <iostream>
-#include "Fraction.h"
-#include "MixedFraction.h"
+#include <limits>
+#include "fraction.h"
+#include "mixedfraction.h"
+#include "mixedfraction.cpp"
+#include "fraction.cpp"
 
-using namespace std;
+void clearFraction(Fraction& currentFraction) {
+    currentFraction = Fraction();  // Reset to 0/1
+}
+
+void clearInputStream() {
+    std::cin.clear();  // Clear the error flag
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discard invalid input
+}
 
 int main() {
-    Fraction currentFraction; // Initial fraction is 0/1
+    Fraction currentFraction;
+    int choice;
 
-    while (true) {
-        cout << "Current Fraction: " << currentFraction << endl;
-        cout << "Options:\n";
-        cout << "1. Enter a fraction manually\n";
-        cout << "2. Add a fraction\n";
-        cout << "3. Subtract a fraction\n";
-        cout << "4. Multiply by a fraction\n";
-        cout << "5. Divide by a fraction\n";
-        cout << "6. Display as Mixed Fraction\n";
-        cout << "7. Clear Fraction\n";
-        cout << "8. Exit\n";
-        int choice;
-        cin >> choice;
+    do {
+        std::cout << "Current Fraction: " << currentFraction << "\n";
+        std::cout << "\nOptions:\n";
+        std::cout << "1. Enter a fraction manually\n";
+        std::cout << "2. Add a fraction\n";
+        std::cout << "3. Subtract a fraction\n";
+        std::cout << "4. Multiply by a fraction\n";
+        std::cout << "5. Divide by a fraction\n";
+        std::cout << "6. Display as Mixed Fraction\n";
+        std::cout << "7. Clear Fraction\n";
+        std::cout << "8. Exit\n";
 
-        if (choice == 1) {
-            int num, den;
-            cout << "Enter numerator and denominator: ";
-            cin >> num >> den;
-            try {
-                currentFraction.setNumerator(num);
-                currentFraction.setDenominator(den);
-            } catch (const exception& e) {
-                cout << e.what() << endl;
-            }
-        } else if (choice >= 2 && choice <= 5) {
-            int num, den;
-            cout << "Enter fraction to operate with (numerator denominator): ";
-            cin >> num >> den;
-            try {
-                Fraction inputFraction(num, den);
-                if (choice == 2) {
-                    currentFraction = currentFraction + inputFraction;
-                } else if (choice == 3) {
-                    currentFraction = currentFraction - inputFraction;
-                } else if (choice == 4) {
-                    currentFraction = currentFraction * inputFraction;
-                } else if (choice == 5) {
-                    currentFraction = currentFraction / inputFraction;
-                }
-            } catch (const exception& e) {
-                cout << e.what() << endl;
-            }
-        } else if (choice == 6) {
-            MixedFraction mixed(currentFraction);
-            cout << "Mixed Fraction: " << mixed << endl;
-        } else if (choice == 7) {
-            currentFraction = Fraction(); // Reset to 0/1
-        } else if (choice == 8) {
-            break;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        if (std::cin.fail()) {
+            std::cout << "Invalid input. Please enter a number between 1 and 8.\n";
+            clearInputStream();
+            continue;
         }
-    }
+
+        switch (choice) {
+            case 1: {
+                int num, den;
+                std::cout << "Enter numerator: ";
+                std::cin >> num;
+                std::cout << "Enter denominator: ";
+                std::cin >> den;
+                if (std::cin.fail() || den == 0) {
+                    std::cerr << "Invalid input. Denominator cannot be zero.\n";
+                    clearInputStream();
+                    break;
+                }
+                try {
+                    currentFraction = Fraction(num, den);
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+
+            case 2: {
+                int num, den;
+                std::cout << "Enter numerator of the fraction to add: ";
+                std::cin >> num;
+                std::cout << "Enter denominator of the fraction to add: ";
+                std::cin >> den;
+                if (std::cin.fail() || den == 0) {
+                    std::cerr << "Invalid input. Denominator cannot be zero.\n";
+                    clearInputStream();
+                    break;
+                }
+                try {
+                    Fraction otherFraction(num, den);
+                    currentFraction = currentFraction + otherFraction;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+
+            case 3: {
+                int num, den;
+                std::cout << "Enter numerator of the fraction to subtract: ";
+                std::cin >> num;
+                std::cout << "Enter denominator of the fraction to subtract: ";
+                std::cin >> den;
+                if (std::cin.fail() || den == 0) {
+                    std::cerr << "Invalid input. Denominator cannot be zero.\n";
+                    clearInputStream();
+                    break;
+                }
+                try {
+                    Fraction otherFraction(num, den);
+                    currentFraction = currentFraction - otherFraction;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+
+            case 4: {
+                int num, den;
+                std::cout << "Enter numerator of the fraction to multiply: ";
+                std::cin >> num;
+                std::cout << "Enter denominator of the fraction to multiply: ";
+                std::cin >> den;
+                if (std::cin.fail() || den == 0) {
+                    std::cerr << "Invalid input. Denominator cannot be zero.\n";
+                    clearInputStream();
+                    break;
+                }
+                try {
+                    Fraction otherFraction(num, den);
+                    currentFraction = currentFraction * otherFraction;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+
+            case 5: {
+                int num, den;
+                std::cout << "Enter numerator of the fraction to divide by: ";
+                std::cin >> num;
+                std::cout << "Enter denominator of the fraction to divide by: ";
+                std::cin >> den;
+                if (std::cin.fail() || den == 0) {
+                    std::cerr << "Invalid input. Denominator cannot be zero.\n";
+                    clearInputStream();
+                    break;
+                }
+                try {
+                    Fraction otherFraction(num, den);
+                    currentFraction = currentFraction / otherFraction;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+
+            case 6: {
+                auto mixed = MixedFraction(currentFraction);
+                std::cout << "Mixed Fraction: " << mixed << "\n";
+                break;
+            }
+
+            case 7:
+                clearFraction(currentFraction);
+                break;
+
+            case 8:
+                std::cout << "Exiting program...\n";
+                break;
+
+            default:
+                std::cout << "Invalid choice, please try again.\n";
+        }
+    } while (choice != 8);
 
     return 0;
 }
