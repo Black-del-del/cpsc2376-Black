@@ -37,6 +37,7 @@ private:
     std::vector<LendingRecord> activeLoans;
 };
 
+```mermaid
 classDiagram
     class Game {
         +string title
@@ -72,3 +73,4 @@ classDiagram
     LendingSystem --> LendingRecord : tracks
     LendingRecord --> Game : references
     LendingRecord --> Customer : references
+```
