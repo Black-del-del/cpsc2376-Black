@@ -11,7 +11,9 @@ protected:
 public:
     Employee(std::string name, int id) : name(name), id(id) {}
     virtual ~Employee() = default;
+
     virtual double calculateSalary() const = 0;
+
     virtual void displayInfo() const {
         std::cout << "ID: " << id << ", Name: " << name;
     }
@@ -23,9 +25,11 @@ private:
 public:
     SalariedEmployee(std::string name, int id, double salary)
         : Employee(name, id), monthlySalary(salary) {}
+
     double calculateSalary() const override {
         return monthlySalary;
     }
+
     void displayInfo() const override {
         std::cout << "ID: " << id << ", Name: " << name
                   << ", Type: Salaried, Monthly Salary: $"
@@ -41,15 +45,16 @@ private:
 public:
     HourlyEmployee(std::string name, int id, double rate, int hours)
         : Employee(name, id), hourlyRate(rate), hoursWorked(hours) {}
+
     double calculateSalary() const override {
         return hourlyRate * hoursWorked;
     }
+
     void displayInfo() const override {
         std::cout << "ID: " << id << ", Name: " << name
                   << ", Type: Hourly, Hours Worked: " << hoursWorked
                   << ", Hourly Rate: $" << std::fixed << std::setprecision(2)
-                  << hourlyRate << ", Salary: $"
-                  << calculateSalary() << std::endl;
+                  << hourlyRate << ", Salary: $" << calculateSalary() << std::endl;
     }
 };
 
@@ -59,9 +64,11 @@ private:
 public:
     CommissionEmployee(std::string name, int id, double base, double sales, double rate)
         : Employee(name, id), baseSalary(base), salesAmount(sales), commissionRate(rate) {}
+
     double calculateSalary() const override {
         return baseSalary + (salesAmount * commissionRate);
     }
+
     void displayInfo() const override {
         std::cout << "ID: " << id << ", Name: " << name
                   << ", Type: Commission, Base Salary: $" << baseSalary
@@ -77,7 +84,7 @@ int main() {
     std::vector<Employee*> employees;
 
     if (!file) {
-        std::cerr << "Error opening file.\n";
+        std::cerr << "Error opening file 'employees.txt'.\n";
         return 1;
     }
 
@@ -106,6 +113,8 @@ int main() {
             std::cerr << "Unknown employee type: " << type << "\n";
         }
     }
+
+    file.close();
 
     for (const auto& emp : employees) {
         emp->displayInfo();
