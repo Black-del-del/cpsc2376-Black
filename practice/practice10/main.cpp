@@ -1,100 +1,96 @@
 #include <iostream>
 #include <fstream>
-#include <memory>
-#include <vector>
 #include <sstream>
+#include <vector>
+#include <memory>
+#include <iomanip>
 #include <cmath>
+#include <string>
 
-// Base class Shape
+#ifndef M_PI
+#define M_PI 3.14159
+#endif
+
+// Base class for all shapes.
 class Shape {
 public:
-    virtual ~Shape() = default; // Virtual destructor for proper cleanup
-    virtual double getArea() const = 0; // Pure virtual method to calculate area
+    virtual ~Shape() = default;
+    virtual double getArea() const = 0; // Pure virtual method for area calculation.
 };
 
-// Derived class Rectangle
+// Derived class for rectangles.
 class Rectangle : public Shape {
 public:
     Rectangle(double width, double height)
-        : width(width), height(height) {}
+        : width_(width), height_(height) {}
 
     double getArea() const override {
-        return width * height;
+        return width_ * height_;
     }
-
 private:
-    double width;
-    double height;
+    double width_, height_;
 };
 
-// Derived class Circle
+// Derived class for circles.
 class Circle : public Shape {
 public:
-    Circle(double radius)
-        : radius(radius) {}
+    explicit Circle(double radius)
+        : radius_(radius) {}
 
     double getArea() const override {
-        return M_PI * radius * radius;
+        return M_PI * radius_ * radius_;
     }
-
 private:
-    double radius;
+    double radius_;
 };
 
-// Function to print the areas of all shapes
+// Function to print the areas of all shapes stored in the vector.
 void printAllAreas(const std::vector<std::unique_ptr<Shape>>& shapes) {
-    if (shapes.empty()) {
-        std::cout << "No shapes to display." << std::endl;
-    } else {
-        for (const auto& shape : shapes) {
-            std::cout << "Area: " << shape->getArea() << std::endl;
-        }
+    std::cout << std::fixed << std::setprecision(4);
+    for (const auto& shape : shapes) {
+        std::cout << "Area: " << shape->getArea() << std::endl;
     }
 }
 
-// Function to read shapes from a file and create objects dynamically
-std::vector<std::unique_ptr<Shape>> readShapesFromFile(const std::string& filename) {
-    std::vector<std::unique_ptr<Shape>> shapes;
-    std::ifstream file(filename);
-
-    // Check if the file is open
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return shapes; // Return an empty vector
+int main() {
+    std::ifstream file("shapes.txt");
+    if (!file) {
+        std::cerr << "Error: Unable to open file shapes.txt" << std::endl;
+        return 1;
     }
 
+    std::vector<std::unique_ptr<Shape>> shapes;
     std::string line;
+
+    // Read each line from the input file and create the corresponding shapes.
     while (std::getline(file, line)) {
-        std::istringstream ss(line);
+        if (line.empty())
+            continue;
+
+        std::istringstream iss(line);
         std::string shapeType;
-        ss >> shapeType;
+        iss >> shapeType;
 
         if (shapeType == "rectangle") {
             double width, height;
-            ss >> width >> height;
+            iss >> width >> height;
+            // Create a new Rectangle using std::make_unique and add it to the vector.
             shapes.push_back(std::make_unique<Rectangle>(width, height));
-        } else if (shapeType == "circle") {
+        }
+        else if (shapeType == "circle") {
             double radius;
-            ss >> radius;
+            iss >> radius;
+            // Create a new Circle using std::make_unique and add it to the vector.
             shapes.push_back(std::make_unique<Circle>(radius));
-        } else {
+        }
+        else {
             std::cerr << "Unknown shape type: " << shapeType << std::endl;
         }
     }
 
-    return shapes;
-}
+    // Print all areas.
+    printAllAreas(shapes);
 
-int main() {
-    const std::string filename = "shapes.txt"; // Input file containing shapes data
-    auto shapes = readShapesFromFile(filename);
-
-    // Check if we successfully read shapes
-    if (shapes.empty()) {
-        std::cout << "No shapes were read from the file." << std::endl;
-    } else {
-        printAllAreas(shapes);
-    }
-
+    // All shape memory is automatically released when 'shapes' goes out of scope.
     return 0;
 }
