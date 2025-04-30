@@ -1,0 +1,4 @@
+Rectangle 10 4
+circle 3
+Rectangle 2 8
+circle 5
