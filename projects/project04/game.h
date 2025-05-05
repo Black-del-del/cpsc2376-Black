@@ -25,4 +25,4 @@ public:
     Cell getCell(int row, int col) const;
 };
 
-#endif // GAME_H
+#endif // GAME_H#pragma once

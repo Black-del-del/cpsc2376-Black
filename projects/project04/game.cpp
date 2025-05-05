@@ -3,7 +3,7 @@
 Game::Game() : board(ROWS, std::vector<Cell>(COLS, EMPTY)), player1Turn(true), gameStatus(ONGOING) {}
 
 bool Game::checkWin(int row, int col, Cell player) {
-    int directions[4][2] = {{1, 0}, {0, 1}, {1, 1}, {1, -1}};
+    int directions[4][2] = { {1, 0}, {0, 1}, {1, 1}, {1, -1} };
     for (auto& dir : directions) {
         int count = 1;
         for (int d = -1; d <= 1; d += 2) {
@@ -33,7 +33,8 @@ void Game::play(int col) {
             board[row][col] = currentPlayer;
             if (checkWin(row, col, currentPlayer)) {
                 gameStatus = player1Turn ? PLAYER_1_WINS : PLAYER_2_WINS;
-            } else if (checkDraw()) {
+            }
+            else if (checkDraw()) {
                 gameStatus = DRAW;
             }
             player1Turn = !player1Turn;
