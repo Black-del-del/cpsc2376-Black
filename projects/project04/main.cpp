@@ -1,4 +1,4 @@
-#define SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "game.h"
@@ -27,6 +27,15 @@ void renderGame(SDL_Renderer* renderer, const Game& game, TTF_Font* font) {
 
             SDL_RenderFillRect(renderer, &cell);
         }
+    }
+
+    // Draw grid lines
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black lines
+    for (int r = 0; r <= Game::ROWS; ++r) {
+        SDL_RenderDrawLine(renderer, 0, r * CELL_SIZE, SCREEN_WIDTH, r * CELL_SIZE);
+    }
+    for (int c = 0; c <= Game::COLS; ++c) {
+        SDL_RenderDrawLine(renderer, c * CELL_SIZE, 0, c * CELL_SIZE, SCREEN_HEIGHT);
     }
 
     // Display win/draw message
@@ -61,7 +70,7 @@ int main() {
         SDL_Log("Failed to initialize SDL_ttf: %s", TTF_GetError());
         return 1;
     }
-    TTF_Font* font = TTF_OpenFont("assets/Arial.ttf", 48);  
+    TTF_Font* font = TTF_OpenFont("assets/Arial.ttf", 48);
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         return 1;
