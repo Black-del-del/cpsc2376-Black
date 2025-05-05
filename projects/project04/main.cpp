@@ -1,6 +1,8 @@
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "game.h"
+#include <string>
 
 const int CELL_SIZE = 100;
 const int SCREEN_WIDTH = Game::COLS * CELL_SIZE;
@@ -13,7 +15,7 @@ void renderGame(SDL_Renderer* renderer, const Game& game, TTF_Font* font) {
     // Draw grid and pieces
     for (int r = 0; r < Game::ROWS; ++r) {
         for (int c = 0; c < Game::COLS; ++c) {
-            SDL_Rect cell = {c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE, CELL_SIZE};
+            SDL_Rect cell = { c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE, CELL_SIZE };
             Cell value = game.getCell(r, c);
 
             if (value == EMPTY)
@@ -35,12 +37,12 @@ void renderGame(SDL_Renderer* renderer, const Game& game, TTF_Font* font) {
         else if (st == PLAYER_2_WINS) msg = "Player 2 Wins!";
         else msg = "It's a Draw!";
 
-        SDL_Color white = {255, 255, 255};
-        SDL_Surface* textSurf = TTF_RenderText_Blended(font, msg.c_str(), white);
+        SDL_Color black = { 0, 0, 0, 255 };
+        SDL_Surface* textSurf = TTF_RenderText_Blended(font, msg.c_str(), black);
         SDL_Texture* textTex = SDL_CreateTextureFromSurface(renderer, textSurf);
         int tw, th;
         SDL_QueryTexture(textTex, nullptr, nullptr, &tw, &th);
-        SDL_Rect dst = {(SCREEN_WIDTH - tw) / 2, (SCREEN_HEIGHT - th) / 2, tw, th};
+        SDL_Rect dst = { (SCREEN_WIDTH - tw) / 2, (SCREEN_HEIGHT - th) / 2, tw, th };
         SDL_RenderCopy(renderer, textTex, nullptr, &dst);
         SDL_FreeSurface(textSurf);
         SDL_DestroyTexture(textTex);
@@ -55,7 +57,11 @@ int main() {
 
     SDL_Window* window = SDL_CreateWindow("Connect 4", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    TTF_Font* font = TTF_OpenFont("assets/OpenSans-Regular.ttf", 48);
+    if (TTF_Init() == -1) {
+        SDL_Log("Failed to initialize SDL_ttf: %s", TTF_GetError());
+        return 1;
+    }
+    TTF_Font* font = TTF_OpenFont("assets/Arial.ttf", 48);  
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         return 1;
@@ -71,7 +77,8 @@ int main() {
             else if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_ESCAPE) quit = true;
                 if (e.key.keysym.sym == SDLK_r) game = Game();
-            } else if (e.type == SDL_MOUSEBUTTONDOWN && game.status() == ONGOING) {
+            }
+            else if (e.type == SDL_MOUSEBUTTONDOWN && game.status() == ONGOING) {
                 int col = e.button.x / CELL_SIZE;
                 game.play(col);
             }
