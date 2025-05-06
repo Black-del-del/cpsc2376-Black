@@ -22,6 +22,7 @@ TEST(MathUtilsTest, SumRange_NegativeToPositive) {
 
 
 // --------- Tests for containsNegative ---------
+
 TEST(MathUtilsTest, ContainsNegative_WithNegative) {
     std::vector<int> values = {3, -1, 5, 7};
     EXPECT_TRUE(MathUtils::containsNegative(values));
