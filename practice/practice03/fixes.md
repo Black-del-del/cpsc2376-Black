@@ -1,27 +1,13 @@
-THe problems with the code included
+The problems or bugs of the program casued the sum Range(1, 5) return a 10 instead of 15
 
-sumRange(int start, int end)
+        Off-by-one: for (int i = start; i < end; i++) excludes end.
 
-Bug: The loop ran from start to end - 1 (i < end), excluding the end value.
+Also, the original code contains Negative({-1}) returns false
 
-Fix: Changed the condition to i <= end to include the full range.
+    Incorrect comparison: should check for < 0, not > 0.
+    Loop goes out of bounds: i <= numbers.size() should be i < numbers.size().
 
-containsNegative(const std::vector<int>& numbers)
+Another bug is findMax({1, 2, 3}) crashes or returns wrong result
 
-Bug 1: The loop used i <= numbers.size(), which causes out-of-bounds access on the last iteration.
-
-Fix: Changed to i < numbers.size().
-
-Bug 2: The condition was if (numbers[i] > 0), which checks for positives instead of negatives.
-
-Fix: Corrected to numbers[i] < 0.
-
-findMax(const std::vector<int>& numbers)
-
-Bug 1: The loop condition was i <= numbers.size(), causing out-of-bounds access.
-
-Fix: Changed to i < numbers.size().
-
-Bug 2: The comparison used >=, which can cause unnecessary overwrites when values are equal.
-
-Fix: Changed to > for proper max logic.
+    Loop bounds error and out-of-bounds access.
+    Should use i < numbers.size() and check > not >=.
