@@ -1,4 +1,3 @@
-// practice03.cpp (Fixed)
 #include <iostream>
 #include <vector>
 #include <stdexcept>
