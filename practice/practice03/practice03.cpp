@@ -23,7 +23,7 @@ public:
   }
 
   static int findMax(const std::vector<int>& numbers) {
-    if (numbers.empty()) throw std::invalid_argument("Empty vector has no maximum"); // Fix: throw exception
+    if (numbers.empty()) throw std::invalid_argument("Empty vector has no maximum"); 
     int maxVal = numbers[0];
     for (size_t i = 1; i < numbers.size(); i++) { 
       if (numbers[i] > maxVal) { 
