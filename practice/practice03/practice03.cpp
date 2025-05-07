@@ -3,40 +3,39 @@
 
 class MathUtils {
 public:
-  // Fix: Include 'end' in the range, so loop must go to <= end
   static int sumRange(int start, int end) {
     int sum = 0;
-    for (int i = start; i <= end; i++) {
+    for (int i = start; i <= end; i++) { // Fixed: Include 'end'
       sum += i;
     }
     return sum;
   }
 
-  // Fixes:
-  // 1. Use i < numbers.size() to avoid out-of-bounds.
-  // 2. Check for numbers[i] < 0 (not > 0).
   static bool containsNegative(const std::vector<int>& numbers) {
-    for (size_t i = 0; i < numbers.size(); i++) {
-      if (numbers[i] < 0) {
+    for (size_t i = 0; i < numbers.size(); i++) { // Fixed: < instead of <=
+      if (numbers[i] < 0) { // Fixed: Check for negative, not positive
         return true;
       }
     }
     return false;
   }
 
-  // Fixes:
-  // 1. Use i < numbers.size() to stay within bounds.
-  // 2. Return a better signal value for empty input (-∞ or exception).
-  // 3. Use > for strict maximum.
   static int findMax(const std::vector<int>& numbers) {
-    if (numbers.empty()) return INT_MIN; // or throw std::runtime_error("Empty list");
-
+    if (numbers.empty()) return 0; // Optional: could throw exception
     int maxVal = numbers[0];
-    for (size_t i = 1; i < numbers.size(); i++) {
-      if (numbers[i] > maxVal) {
+    for (size_t i = 1; i < numbers.size(); i++) { // Fixed: < instead of <=
+      if (numbers[i] > maxVal) { // Fixed: > instead of >= to avoid unnecessary overwrite
         maxVal = numbers[i];
       }
     }
     return maxVal;
   }
 };
+
+int main() {
+  std::cout << "Sum from 1 to 5: " << MathUtils::sumRange(1, 5) << std::endl;
+  std::vector<int> values = {3, -1, 5, 7};
+  std::cout << "Contains negative? " << (MathUtils::containsNegative(values) ? "Yes" : "No") << std::endl;
+  std::cout << "Max value: " << MathUtils::findMax(values) << std::endl;
+  return 0;
+}
